@@ -5,9 +5,10 @@ using UnityEngine;
 public class GridManager : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
+    [SerializeField] private CameraAdjust cameraAdjust = new CameraAdjust();
 
     [SerializeField] private Vector2Int gridSize=Vector2Int.zero;
-    [SerializeField] private Vector2 cellSize=Vector2.one;
+    [SerializeField][Min(0)] private Vector2 cellSize=Vector2.one;
 
     //Code Ban Dung Danh Em
     private Vector2 gridPos;
@@ -30,6 +31,7 @@ public class GridManager : MonoBehaviour
     {
         camPos = new Vector2(x, y);
         _camera.transform.position = (Vector3)(camPos * cellSize) + offSet;
+        _camera.orthographicSize = cameraAdjust.Cal(cellSize*gridSize);
     }
     void Update()
     {
