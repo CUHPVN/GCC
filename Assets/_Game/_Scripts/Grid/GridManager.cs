@@ -9,7 +9,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Vector2Int gridSize=Vector2Int.zero;
     [SerializeField] private Vector2 cellSize=Vector2.one;
 
-    //
+    //Code Ban Dung Danh Em
     private Vector2 gridPos;
     private Vector2 mousePos;
     private Vector3 offSet = new Vector3(0, 0, -10);
@@ -19,6 +19,7 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
+        _camera = Camera.main;
         UpdateCamera();
     }
     private void OnValidate()
@@ -35,7 +36,7 @@ public class GridManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             mousePos = _camera.ScreenToWorldPoint(Input.mousePosition)/cellSize;
-            if (mousePos.x <= gridPos.x && mousePos.y <= gridPos.y)
+            if (mousePos.x>0 && mousePos.x <= gridSize.x &&mousePos.x > 0&& mousePos.y <= gridSize.y)
             {
                 Debug.Log(Vector2Int.CeilToInt(mousePos));
             }
