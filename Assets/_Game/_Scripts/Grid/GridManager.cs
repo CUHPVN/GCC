@@ -38,7 +38,7 @@ public class GridManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             mousePos = _camera.ScreenToWorldPoint(Input.mousePosition)/cellSize;
-            if (mousePos.x>0 && mousePos.x <= gridSize.x &&mousePos.x > 0&& mousePos.y <= gridSize.y)
+            if (mousePos.x>0 && mousePos.x <= gridSize.x &&mousePos.y > 0&& mousePos.y <= gridSize.y)
             {
                 Debug.Log(Vector2Int.CeilToInt(mousePos));
             }
