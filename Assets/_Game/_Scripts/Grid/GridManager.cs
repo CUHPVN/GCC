@@ -34,19 +34,23 @@ public class GridManager : MonoBehaviour
     {
         UpdateCamera();
     }
-    private void UpdateCamera()
-    {
-        if(cameraControler==null) return;
-        cameraControler.UpdateCameraByGrid(gridPos, cellSize,gridCenter,gridSize);
-        lastPos = gridPos;
-    }
     void Update()
+    {
+        CheckMouseDown();
+    }
+    private void CheckMouseDown()
     {
         if (Input.GetMouseButtonDown(0))
         {
             mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
             WorldToGrid(mousePos);
         }
+    }
+    private void UpdateCamera()
+    {
+        if(cameraControler==null) return;
+        cameraControler.UpdateCameraByGrid(gridPos, cellSize,gridCenter,gridSize);
+        lastPos = gridPos;
     }
     private void WorldToGrid(Vector2 pos)
     {
@@ -59,17 +63,24 @@ public class GridManager : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        // MoveCamera When Grid Move
+        CheckMove();
+        DrawGrid();
+    }
+    private void CheckMove()
+    {
         if (Vector2.Distance(lastPos, gridPos) >= 0.01f)
         {
             UpdateCamera();
         }
+    }
+    private void DrawGrid()
+    {
         Gizmos.color = Color.yellow;
-        for(int i = 0; i < gridSize.x; i++)
+        for (int i = 0; i < gridSize.x; i++)
         {
             for (int j = 0; j < gridSize.y; j++)
             {
-                Vector2 pos = gridPos + new Vector2(i+0.5f,j+0.5f) * cellSize;
+                Vector2 pos = gridPos + new Vector2(i + 0.5f, j + 0.5f) * cellSize;
                 Gizmos.DrawWireCube(pos, cellSize);
             }
         }
