@@ -24,7 +24,7 @@ public class CSBasicAndUnity : MonoBehaviour
         int currHP = 10;
         AddHeath(ref currHP, 2);
         Debug.Log(currHP); //12;
-        if(TryGetItem("water",out Item item))
+        if(TryGetItem("water",out ItemTEMP item))
         {
             Debug.Log(item.name);
         }
@@ -37,7 +37,7 @@ public class CSBasicAndUnity : MonoBehaviour
             Debug.Log(value);
         }
     }
-    private bool TryGetItem(string name, out Item item)
+    private bool TryGetItem(string name, out ItemTEMP item)
     {
         if(name=="?")
         {

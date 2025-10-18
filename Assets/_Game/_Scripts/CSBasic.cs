@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item
+public class ItemTEMP
 {
     public int id;
     public string name;
@@ -25,10 +25,10 @@ public class CSBasic : MonoBehaviour
         scoreB = 1;
         Debug.Log(scoreA + " " + scoreB);
 
-        Item item = new Item();
+        ItemTEMP item = new ItemTEMP();
         item.name = "PHUC";
 
-        Item item1 = item;
+        ItemTEMP item1 = item;
         item1.name = "SomeOne";
 
         Debug.Log(item.name + " " + item1.name);

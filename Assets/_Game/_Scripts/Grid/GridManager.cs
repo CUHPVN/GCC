@@ -2,87 +2,60 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridManager : MonoBehaviour
+public class GridManager : GridGeneric<ItemData>
 {
-    [SerializeField] private Camera _camera;
+    public static GridManager Instance;
+
     [SerializeField] private CameraControler cameraControler;
-
-    [SerializeField] private Vector2Int gridSize=Vector2Int.one;
-    [SerializeField][Min(0.01f)] private Vector2 cellSize=Vector2.one;
-
-    //Code Ban Dung Danh Em
-    private Vector2 gridPos => transform.position;
-    private Vector2 mousePos;
-    private Vector2 lastPos = Vector2.zero;
-    private float x => (float)gridSize.x / 2;
-    private float y => (float)gridSize.y / 2;
-    private Vector2 gridCenter => new Vector2(x,y);
-
+    //
+    private void Awake()
+    {
+        Instance = this;
+    }
     private void Reset()
     {
         _camera = Camera.main;
         cameraControler = _camera.GetComponent<CameraControler>();
-        UpdateCamera();
+        //UpdateCamera();
     }
-    void Start()
+    protected override void OnStart()
     {
         _camera = Camera.main;
         cameraControler= _camera.GetComponent<CameraControler>();
-        UpdateCamera();
+        //UpdateCamera();
     }
+    public bool CheckMouseDown()
+    {
+        mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = ToGridPos(mousePos);
+        if (!IsClickOnGrid(mousePos)) return false;
+        if (GetGridIndexByMouse(mousePos)==null) return false;
+        return true;
+    }
+    public bool CheckMouseUp(out Vector2Int index)
+    {
+        index = -Vector2Int.one;
+        mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = ToGridPos(mousePos);
+        if (!IsClickOnGrid(mousePos)) return false;
+        index = GetGridIndexByMouse(mousePos);
+        if (index == -Vector2Int.one) return false;
+        return true;
+    }
+    
     private void OnValidate()
     {
-        UpdateCamera();
+        //UpdateCamera();
     }
-    void Update()
-    {
-        CheckMouseDown();
-    }
-    private void CheckMouseDown()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
-            WorldToGrid(mousePos);
-        }
-    }
+    
     private void UpdateCamera()
     {
         if(cameraControler==null) return;
         cameraControler.UpdateCameraByGrid(gridPos, cellSize,gridCenter,gridSize);
         lastPos = gridPos;
     }
-    private void WorldToGrid(Vector2 pos)
+    protected override void DrawGiz()
     {
-        pos -= gridPos;
-        pos /= cellSize;
-        if (pos.x > 0 && pos.x <= gridSize.x && pos.y > 0 && pos.y <= gridSize.y)
-        {
-            Debug.Log(Vector2Int.CeilToInt(pos));
-        }
-    }
-    private void OnDrawGizmos()
-    {
-        CheckMove();
-        DrawGrid();
-    }
-    private void CheckMove()
-    {
-        if (Vector2.Distance(lastPos, gridPos) >= 0.01f)
-        {
-            UpdateCamera();
-        }
-    }
-    private void DrawGrid()
-    {
-        Gizmos.color = Color.yellow;
-        for (int i = 0; i < gridSize.x; i++)
-        {
-            for (int j = 0; j < gridSize.y; j++)
-            {
-                Vector2 pos = gridPos + new Vector2(i + 0.5f, j + 0.5f) * cellSize;
-                Gizmos.DrawWireCube(pos, cellSize);
-            }
-        }
+        //if(CheckMove()) UpdateCamera();
     }
 }
