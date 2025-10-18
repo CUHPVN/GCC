@@ -18,6 +18,7 @@ public class GridGeneric<T> : MonoBehaviour where T : class
     public Vector2 gridCenter => new Vector2(x, y)*cellSize;
 
     private T[,] grid;
+    private bool[,] isHover;
     private void Awake()
     {
         _camera = Camera.main;
@@ -25,11 +26,39 @@ public class GridGeneric<T> : MonoBehaviour where T : class
     private void Start()
     {
         grid = new T[gridSize.x,gridSize.y];
+        isHover = new bool[gridSize.x, gridSize.y];
         OnStart();
     }
     protected virtual void OnStart() { }
     void Update()
     {
+        HoverUpdate();
+    }
+    private void HoverUpdate()
+    {
+        mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = ToGridPos(mousePos);
+        if (!IsClickOnGrid(mousePos))
+        {
+            for (int i = 0; i < gridSize.x; i++)
+            {
+                for (int j = 0; j < gridSize.y; j++)
+                {
+                    isHover[i, j] = false;
+                }
+            }
+            return;
+        }
+        Vector2Int gridIndex = GetGridIndexByMouse(mousePos);
+        if (gridIndex == -Vector2Int.one) return ;
+        for(int i = 0; i < gridSize.x; i++)
+        {
+            for(int j = 0; j < gridSize.y; j++)
+            {
+                isHover[i,j] = false;
+            }
+        }
+        isHover[gridIndex.x,gridIndex.y] = true;
     }
 
     protected bool IsClickOnGrid(Vector2 pos)
@@ -100,8 +129,11 @@ public class GridGeneric<T> : MonoBehaviour where T : class
             for (int j = 0; j < gridSize.y; j++)
             {
                 Vector2 pos = gridPos + new Vector2(i + 0.5f, j + 0.5f) * cellSize;
-                if (grid != null) { if (grid[i, j] != null) Gizmos.color = Color.red; 
-                    else Gizmos.color = Color.green; }
+                if (grid != null) { 
+                if (grid[i, j] != null) Gizmos.color = Color.red;
+                else if (isHover[i,j]) Gizmos.color = Color.yellow;
+                else Gizmos.color = Color.green; 
+                }
                 Gizmos.DrawWireCube(pos, cellSize*0.90f);
             }
         }

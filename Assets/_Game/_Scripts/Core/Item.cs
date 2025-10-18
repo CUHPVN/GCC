@@ -19,8 +19,8 @@ public class Item : MonoBehaviour, IPickable
 
     public void OnPicked()
     {
-        transform.position = InputManager.Instance.MousePos;
-        //transform.position = lastPos+ InputManager.Instance.DragVector; //Mobile
+        //transform.position = InputManager.Instance.MousePos; // PC
+        transform.position = lastPos+ InputManager.Instance.DragVector; //Mobile
     }
 
     public void UnPicked()

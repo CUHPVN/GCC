@@ -29,7 +29,7 @@ public class GridManager : GridGeneric<ItemData>
         mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
         mousePos = ToGridPos(mousePos);
         if (!IsClickOnGrid(mousePos)) return false;
-        if (GetGridIndexByMouse(mousePos)==null) return false;
+        if (GetGridIndexByMouse(mousePos)==-Vector2Int.one) return false;
         return true;
     }
     public bool CheckMouseUp(out Vector2Int index)
