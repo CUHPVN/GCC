@@ -15,6 +15,7 @@ public class Item : MonoBehaviour, IPickable
     public void IsPicked()
     {
         picked = true;
+        lastPos = transform.position;
     }
 
     public void OnPicked()
