@@ -9,7 +9,7 @@ public class NPC : MonoBehaviour, ITriggerable, IAttackable
     [SerializeField] private CircleCollider2D circleCollider; 
     private bool isChat=false;
     private bool attackable = false; //co the danh
-    [SerializeField] private float punchForce = 5f;
+    [SerializeField] private float punchForce = 15f;
 
     private void Awake()
     {
@@ -46,7 +46,7 @@ public class NPC : MonoBehaviour, ITriggerable, IAttackable
     }
     private IEnumerator TurnOffChatBox()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         chatBox.gameObject.SetActive(false);
         attackable = true;  // co the danh
         yield break;

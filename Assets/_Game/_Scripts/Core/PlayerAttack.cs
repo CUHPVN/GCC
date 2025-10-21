@@ -6,7 +6,9 @@ public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private float attackRange=1.5f;
     [SerializeField] private LayerMask attackableLayer;
-    
+    Collider2D[] raycastHit2D = new Collider2D[10];
+
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space)) Attack();
@@ -15,14 +17,15 @@ public class PlayerAttack : MonoBehaviour
     {
         {
             //Attack 
-            Collider2D[] raycastHit2D = Physics2D.OverlapCircleAll(transform.position, attackRange, attackableLayer);
+            //Collider2D[] raycastHit2D = Physics2D.OverlapCircleAll(transform.position, attackRange, attackableLayer);
+            int count = Physics2D.OverlapCircleNonAlloc(transform.position, attackRange, raycastHit2D,attackableLayer);
             //danh nhung
-            foreach (Collider2D collision in raycastHit2D)
+            for (int i= 0;i < count;i++)
             {
-                if (collision.CompareTag("Player")) return;
-                if (collision.CompareTag("NPC"))
+                if (raycastHit2D[i].CompareTag(CONST.TAG_PLAYER)) return;
+                if (raycastHit2D[i].CompareTag(CONST.TAG_NPC))
                 {
-                    IAttackable attackable = collision.GetComponent<IAttackable>();
+                    IAttackable attackable = raycastHit2D[i].GetComponent<IAttackable>();
                     if (attackable != null)
                     {
                         attackable.OnAttacked(this.transform);
