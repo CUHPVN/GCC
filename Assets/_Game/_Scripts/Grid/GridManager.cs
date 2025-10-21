@@ -1,61 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Sprites;
 using UnityEngine;
 
-public class GridManager : GridGeneric<ItemData>
+public class GridManager : MonoBehaviour
 {
     public static GridManager Instance;
-
-    [SerializeField] private CameraControler cameraControler;
+    [SerializeField] protected Vector2Int gridSize = Vector2Int.one;
+    [SerializeField][Min(0.01f)] protected Vector2 cellSize = Vector2.one;
+    private GridGeneric<ItemData> grid;
     //
     private void Awake()
     {
         Instance = this;
+        grid = new GridGeneric<ItemData>(gridSize,cellSize,transform);
     }
     private void Reset()
     {
-        _camera = Camera.main;
-        cameraControler = _camera.GetComponent<CameraControler>();
         //UpdateCamera();
     }
-    protected override void OnStart()
+    private void Update()
     {
-        _camera = Camera.main;
-        cameraControler= _camera.GetComponent<CameraControler>();
-        //UpdateCamera();
+        grid.HoverUpdate(InputManager.Instance.MousePos);
     }
-    public bool CheckMouseDown()
+
+    public void OnItemUpPicked(ItemData _data, ref Vector2 lastPos,Transform transformPos,ref Vector2Int currentSlot)
     {
-        mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
-        mousePos = ToGridPos(mousePos);
-        if (!IsClickOnGrid(mousePos)) return false;
-        if (GetGridIndexByMouse(mousePos)==-Vector2Int.one) return false;
-        return true;
+        Vector2Int index;
+        if (grid.CheckMouseUp(out index))
+        {
+            if (grid.IsEmptySlot(index.x, index.y))
+            {
+                grid.SetGridByIndex(index.x, index.y, _data);
+                transformPos.position = grid.GetGridPos(index.x, index.y);
+                lastPos = transformPos.position;
+                if (currentSlot != -Vector2Int.one) grid.TakeDataByIndex(currentSlot.x, currentSlot.y);
+                currentSlot = index;
+                transformPos.position = lastPos;
+            }
+            else
+            {
+                transformPos.position = lastPos;
+            }
+        }
+        else
+        {
+            if (currentSlot != -Vector2Int.one) grid.TakeDataByIndex(currentSlot.x, currentSlot.y);
+            currentSlot = -Vector2Int.one;
+            lastPos = transformPos.position;
+        }
     }
-    public bool CheckMouseUp(out Vector2Int index)
+    private void OnDrawGizmos()
     {
-        index = -Vector2Int.one;
-        mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
-        mousePos = ToGridPos(mousePos);
-        if (!IsClickOnGrid(mousePos)) return false;
-        index = GetGridIndexByMouse(mousePos);
-        if (index == -Vector2Int.one) return false;
-        return true;
+        if(grid!=null)
+        grid.DrawGrid();
     }
-    
-    private void OnValidate()
-    {
-        //UpdateCamera();
-    }
-    
-    private void UpdateCamera()
-    {
-        if(cameraControler==null) return;
-        cameraControler.UpdateCameraByGrid(gridPos, cellSize,gridCenter,gridSize);
-        lastPos = gridPos;
-    }
-    protected override void DrawGiz()
-    {
-        //if(CheckMove()) UpdateCamera();
-    }
+
 }

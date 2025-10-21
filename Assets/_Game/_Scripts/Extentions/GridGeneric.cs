@@ -4,39 +4,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.PlayerSettings;
 
-public class GridGeneric<T> : MonoBehaviour where T : class
+public class GridGeneric<T> where T : class
 {
-    [SerializeField] protected Camera _camera;
     [SerializeField] protected Vector2Int gridSize = Vector2Int.one;
     [SerializeField][Min(0.01f)] protected Vector2 cellSize = Vector2.one;
-    //
+    private Transform transform;
     protected Vector2 gridPos => transform.position;
     protected Vector2 mousePos;
-    protected Vector2 lastPos = Vector2.zero;
+    protected Vector2 lastPos = new Vector2(0,0);
     protected float x => (float)gridSize.x / 2;
     protected float y => (float)gridSize.y / 2;
     public Vector2 gridCenter => new Vector2(x, y)*cellSize;
 
     private T[,] grid;
     private bool[,] isHover;
-    private void Awake()
+   
+
+    public GridGeneric(Vector2Int gridSize,Vector2 cellSize, Transform transform)
     {
-        _camera = Camera.main;
-    }
-    private void Start()
-    {
-        grid = new T[gridSize.x,gridSize.y];
+        this.gridSize = gridSize;
+        this.cellSize = cellSize;
+        this.transform = transform;
+        grid = new T[gridSize.x, gridSize.y];
         isHover = new bool[gridSize.x, gridSize.y];
-        OnStart();
     }
-    protected virtual void OnStart() { }
-    void Update()
+    public void SetGridTransform(Transform transform)
     {
-        HoverUpdate();
     }
-    private void HoverUpdate()
+    public void HoverUpdate(Vector3 mousePos)
     {
-        mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
         mousePos = ToGridPos(mousePos);
         if (!IsClickOnGrid(mousePos))
         {
@@ -121,7 +117,27 @@ public class GridGeneric<T> : MonoBehaviour where T : class
     {
         return (Vector2.Distance(lastPos, gridPos) >= 0.01f);
     }
-    private void DrawGrid()
+    public bool CheckMouseUp(out Vector2Int index)
+    {
+        index = -Vector2Int.one;
+        mousePos = InputManager.Instance.MousePos;
+        mousePos = ToGridPos(mousePos);
+        if (!IsClickOnGrid(mousePos)) return false;
+        index = GetGridIndexByMouse(mousePos);
+        if (index == -Vector2Int.one) return false;
+        return true;
+    }
+    public bool CheckMouseDown()
+    {
+        Vector2Int index = -Vector2Int.one;
+        mousePos = InputManager.Instance.MousePos;
+        mousePos = ToGridPos(mousePos);
+        if (!IsClickOnGrid(mousePos)) return false;
+        index = GetGridIndexByMouse(mousePos);
+        if (index == -Vector2Int.one) return false;
+        return true;
+    }
+    public void DrawGrid()
     {
         Gizmos.color = Color.green;
         for (int i = 0; i < gridSize.x; i++)
@@ -138,10 +154,5 @@ public class GridGeneric<T> : MonoBehaviour where T : class
             }
         }
     }
-    protected virtual void DrawGiz() { }
-    private void OnDrawGizmos()
-    {
-        DrawGrid();
-        DrawGiz();
-    }
+   
 }

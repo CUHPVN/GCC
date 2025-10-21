@@ -11,7 +11,7 @@ public class NPC : MonoBehaviour, ITriggerable, IAttackable
     private bool attackable = false; //co the danh
     [SerializeField] private float punchForce = 5f;
 
-    private void Start()
+    private void Awake()
     {
         rb=GetComponent<Rigidbody2D>();
     }

@@ -10,6 +10,10 @@ public class ItemTEMP
 
 public class CSBasic : MonoBehaviour
 {
+    private void Awake()
+    {
+        Debug.Log(this.name + "Awake");
+    }
     private void Start()
     {
         //PhanBietValueRef();
