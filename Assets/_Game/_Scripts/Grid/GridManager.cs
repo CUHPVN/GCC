@@ -24,7 +24,7 @@ public class GridManager : MonoBehaviour
         grid.HoverUpdate(InputManager.Instance.MousePos);
     }
 
-    public void OnItemUpPicked(ItemData _data, ref Vector2 lastPos,Transform transformPos,ref Vector2Int currentSlot)
+    public void OnItemUpPicked(ItemData _data, ref Vector2 lastPos,Transform transformPos,ref Vector2Int currentSlot,Item item)
     {
         Vector2Int index;
         if (grid.CheckMouseUp(out index))
@@ -32,16 +32,13 @@ public class GridManager : MonoBehaviour
             if (grid.IsEmptySlot(index.x, index.y))
             {
                 grid.SetGridByIndex(index.x, index.y, _data);
-                transformPos.position = grid.GetGridPos(index.x, index.y);
-                lastPos = transformPos.position;
+                Vector2 targetPos = grid.GetGridPos(index.x, index.y);
+                lastPos = targetPos;
                 if (currentSlot != -Vector2Int.one) grid.TakeDataByIndex(currentSlot.x, currentSlot.y);
                 currentSlot = index;
-                transformPos.position = lastPos;
             }
-            else
-            {
-                transformPos.position = lastPos;
-            }
+            item.MoveTo(lastPos);
+
         }
         else
         {
@@ -50,6 +47,7 @@ public class GridManager : MonoBehaviour
             lastPos = transformPos.position;
         }
     }
+    
     private void OnDrawGizmos()
     {
         if(grid!=null)
