@@ -111,7 +111,7 @@ public class GridGeneric<T> where T : class
     }
     public Vector2 GetGridPos(int x,int y)
     {
-        return gridPos+ new Vector2Int(x,y)*cellSize + Vector2.one/2f;
+        return gridPos+ new Vector2Int(x,y)*cellSize + cellSize* Vector2.one/2f;
     }
     protected virtual bool CheckMove()
     {
@@ -150,7 +150,7 @@ public class GridGeneric<T> where T : class
                 else if (isHover[i,j]) Gizmos.color = Color.yellow;
                 else Gizmos.color = Color.green; 
                 }
-                Gizmos.DrawWireCube(pos, cellSize*0.90f);
+                Gizmos.DrawWireCube(pos, cellSize*0.95f);
             }
         }
     }
