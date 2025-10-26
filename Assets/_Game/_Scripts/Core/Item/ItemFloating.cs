@@ -10,33 +10,31 @@ public class ItemFloating : MonoBehaviour
     private Vector3 maxScale = new Vector3(1.2f, 1.2f, 1.2f);
 
     private Coroutine floating;
-    private Coroutine unfloating;
-    [SerializeField] private AnimationCurve animationCurve;
+    [SerializeField] private AnimationCurve inCurve;
+    [SerializeField] private AnimationCurve outCurve;
+
 
     public void Floating()
     {
-        if(unfloating!=null) StopCoroutine(unfloating);
-        floating = StartCoroutine(Float(duration,visual.localScale,maxScale));
+        if(floating!=null) StopCoroutine(floating);
+        floating = StartCoroutine(Float(duration,visual.localScale,maxScale,inCurve));
     }
     public void UnFloating()
     {
         if(floating!=null) StopCoroutine(floating);
-        unfloating = StartCoroutine(Float(duration,visual.localScale,minScale));
+        floating = StartCoroutine(Float(duration,visual.localScale,minScale, outCurve));
     }
-    private IEnumerator Float(float duration,Vector3 startScale, Vector3 targetScale)
+    private IEnumerator Float(float duration,Vector3 startScale, Vector3 targetScale,AnimationCurve curve)
     {
         float time = 0;
-        while(true)
+        while(time < duration)
         {
             time+= Time.deltaTime;
-            if (time >= duration)
-            {
-                visual.transform.localScale = targetScale;
-                break;
-            }
-            visual.transform.localScale = Vector3.Lerp(startScale, targetScale, animationCurve.Evaluate(time/(duration)));
+            visual.transform.localScale = Vector3.Lerp(startScale, targetScale, curve.Evaluate(time/(duration)));
             yield return null;
         }
+        visual.transform.localScale = targetScale;
+
     }
     public void OnDestroy()
     {
