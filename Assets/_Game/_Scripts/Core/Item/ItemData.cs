@@ -7,6 +7,11 @@ public class ItemData
 {
     public int id;
     public string name;
+    public ItemData()
+    {
+        this.id = 0;
+        this.name = "none";
+    }
     public ItemData(int id, string name)
     {
         this.id = id;

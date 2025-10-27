@@ -13,7 +13,10 @@ public class ItemFloating : MonoBehaviour
     [SerializeField] private AnimationCurve inCurve;
     [SerializeField] private AnimationCurve outCurve;
 
-
+    private void Awake()
+    {
+        if (visual == null) visual = transform;
+    }
     public void Floating()
     {
         if(floating!=null) StopCoroutine(floating);

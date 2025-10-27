@@ -19,7 +19,7 @@ public class PickItemHandle : MonoBehaviour
             if(hit.collider != null)
             {
                 pickableObj = hit.collider.GetComponent<IPickable>();
-                pickableObj.IsPicked();
+                if(pickableObj!=null) pickableObj.IsPicked();
             }
         }
     }

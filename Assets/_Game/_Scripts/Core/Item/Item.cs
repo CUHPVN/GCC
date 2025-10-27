@@ -2,20 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(ItemFloating))]
 public class Item : MonoBehaviour, IPickable
 {
     [SerializeField] private ItemFloating itemFloating;
-    [SerializeField] private ItemData _data = new ItemData(0,"ten");
+    [SerializeField] private ItemData _data;
     private Vector2Int currentSlot = -Vector2Int.one;
     private Vector2 lastPos;
     private bool picked=false;
     private bool canClick = true;
-    // Code Ban Vai O
+   
     void Awake()
     {
+        if(_data == null) _data = new ItemData();
         lastPos = transform.position;
         itemFloating = GetComponent<ItemFloating>();
     }
+    
     public void IsPicked()
     {
         if (!canClick) return;
@@ -27,8 +30,7 @@ public class Item : MonoBehaviour, IPickable
 
     public void OnPicked()
     {
-        //transform.position = InputManager.Instance.MousePos; // PC
-        transform.position = lastPos+ InputManager.Instance.DragVector; //Mobile
+        transform.position = lastPos+ InputManager.Instance.DragVector; 
     }
 
     public void UnPicked()
@@ -48,17 +50,12 @@ public class Item : MonoBehaviour, IPickable
     {
         float time = 0;
         Vector3 startPos = transform.position;
-        while (true)
+        while (time < duration)
         {
-            time += Time.deltaTime;
-            if (time >= duration)
-            {
-                transform.position = target;
-                break;
-            }
             transform.position = Vector3.Lerp(startPos, target, time / duration);
             yield return null;
         }
+        transform.position = target;
         canClick = true;
         yield break;
     }
@@ -75,4 +72,6 @@ public class Item : MonoBehaviour, IPickable
     {
         StopAllCoroutines(); 
     }
+
+   
 }

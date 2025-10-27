@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 5401453972595718545}
   m_Layer: 6
   m_Name: Item
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d44851aaffc83014ca15c4388bb2dc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemFloating: {fileID: 0}
+  itemFloating: {fileID: 5401453972595718545}
   _data:
     id: 0
     name: tung

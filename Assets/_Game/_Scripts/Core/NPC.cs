@@ -17,6 +17,7 @@ public class NPC : MonoBehaviour, ITriggerable, IAttackable
     }
     public void OnTrigger()
     {
+        Debug.Log("Di Ra");
         SaySomeThing(); 
     }
 

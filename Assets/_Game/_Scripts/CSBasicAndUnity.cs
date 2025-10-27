@@ -10,7 +10,7 @@ public class CSBasicAndUnity : MonoBehaviour
 
     private void Start()
     {
-        Player hero = new Player("phuc");    
+        PlayerTMP hero = new PlayerTMP("phuc");    
     }
     private void KeyWords()
     {
@@ -55,10 +55,10 @@ public class CSBasicAndUnity : MonoBehaviour
     }
 }
 
-public class Player
+public class PlayerTMP
 {
     public readonly string name;
-    public Player(string name) {  this.name = name; }
+    public PlayerTMP(string name) {  this.name = name; }
 }
 
 public class GameConfig
