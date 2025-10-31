@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerVisual : MonoBehaviour
+public class PlayerVisual : MonoBehaviour, IUpdateable
 {
     private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -11,11 +11,19 @@ public class PlayerVisual : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
     }
+    private void OnEnable()
+    {
+        UpdateManager.Register(this);
+    }
+    private void OnDisable()
+    {
+        UpdateManager.UnRegister(this);
+    }
     public void ChangeColor(Color color)
     {
         spriteRenderer.color = color;
     }
-    private void Update()
+    public void OnUpdate()
     {
         if(rb.velocity.x > 0.1f)
         {

@@ -2,14 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour
+public class PlayerAttack : MonoBehaviour, IUpdateable
 {
     [SerializeField] private float attackRange=1.5f;
     [SerializeField] private LayerMask attackableLayer;
     Collider2D[] raycastHit2D = new Collider2D[10];
 
-
-    private void Update()
+    private void OnEnable()
+    {
+        UpdateManager.Register(this);
+    }
+    private void OnDisable()
+    {
+        UpdateManager.UnRegister(this);
+    }
+    public void OnUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Space)) Attack();
     }

@@ -2,11 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickItemHandle : MonoBehaviour
+public class PickItemHandle : MonoBehaviour, IUpdateable
 {
     [SerializeField] private LayerMask pickableLayer;
-    [SerializeField] private IPickable pickableObj; 
-    private void Update()
+    [SerializeField] private IPickable pickableObj;
+
+    private void OnEnable()
+    {
+        UpdateManager.Register(this);
+    }
+    private void OnDisable()
+    {
+        UpdateManager.UnRegister(this);
+    }
+    public void OnUpdate()
     {
         CheckClickItem();
         CheckDropItem();

@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(ItemFloating))]
-public class Item : MonoBehaviour, IPickable
+public class Item : MonoBehaviour, IPickable, IUpdateable
 {
     [SerializeField] private ItemFloating itemFloating;
     [SerializeField] private ItemData _data;
     private Vector2Int currentSlot = -Vector2Int.one;
     private Vector2 lastPos;
+    private Vector2 offset;
+
     private bool picked=false;
     private bool canClick = true;
    
@@ -18,19 +20,27 @@ public class Item : MonoBehaviour, IPickable
         lastPos = transform.position;
         itemFloating = GetComponent<ItemFloating>();
     }
-    
+    private void OnEnable()
+    {
+        UpdateManager.Register(this);
+    }
+    private void OnDisable()
+    {
+        UpdateManager.UnRegister(this);
+    }
     public void IsPicked()
     {
         if (!canClick) return;
         picked = true;
         canClick = false;
         lastPos = transform.position;
+        offset = InputManager.Instance.MousePos - lastPos;
         itemFloating.Floating();
     }
 
     public void OnPicked()
     {
-        transform.position = lastPos+ InputManager.Instance.DragVector; 
+        transform.position = InputManager.Instance.MousePos - offset; 
     }
 
     public void UnPicked()
@@ -52,6 +62,7 @@ public class Item : MonoBehaviour, IPickable
         Vector3 startPos = transform.position;
         while (time < duration)
         {
+            time += Time.deltaTime;
             transform.position = Vector3.Lerp(startPos, target, time / duration);
             yield return null;
         }
@@ -59,7 +70,7 @@ public class Item : MonoBehaviour, IPickable
         canClick = true;
         yield break;
     }
-    void Update()
+    public void OnUpdate()
     {
         CheckPicked();
     }

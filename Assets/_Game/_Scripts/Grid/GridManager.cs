@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Sprites;
 using UnityEngine;
 
-public class GridManager : MonoBehaviour
+public class GridManager : MonoBehaviour, IUpdateable
 {
     public static GridManager Instance;
     [SerializeField] protected Vector2Int gridSize = Vector2Int.one;
@@ -15,11 +15,15 @@ public class GridManager : MonoBehaviour
         Instance = this;
         grid = new GridGeneric<ItemData>(gridSize,cellSize,transform);
     }
+    private void OnEnable()
+    {
+        UpdateManager.Register(this);
+    }
     private void Reset()
     {
         //UpdateCamera();
     }
-    private void Update()
+    public void OnUpdate()
     {
         grid.HoverUpdate(InputManager.Instance.MousePos);
     }
@@ -52,6 +56,10 @@ public class GridManager : MonoBehaviour
     {
         if(grid!=null)
         grid.DrawGrid();
+    }
+    private void OnDisable()
+    {
+        UpdateManager.UnRegister(this);
     }
 
 }

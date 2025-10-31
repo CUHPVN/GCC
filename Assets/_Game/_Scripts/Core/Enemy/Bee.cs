@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bee : BaseEnemy
+public class Bee : BaseEnemy, IStopUpdate
 {
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform[] targets;
@@ -11,6 +11,18 @@ public class Bee : BaseEnemy
     {
         if(rb == null) rb = GetComponent<Rigidbody2D>();
         OnInit();
+    }
+    private void OnEnable()
+    {
+        UpdateManager.Register(this);
+        UpdateManager.RegisterStopUpdate(this);
+
+    }
+    private void OnDisable()
+    {
+        UpdateManager.UnRegister(this);
+        UpdateManager.UnRegisterStopUpdate(this);
+
     }
     public override void OnInit()
     {
@@ -34,9 +46,13 @@ public class Bee : BaseEnemy
             rb.velocity = Vector3.zero;
         }
     }
-    public void Update()
+    public override void OnUpdate()
     {
         Move();
     }
 
+    public void OnStopUpdate()
+    {
+        rb.velocity = Vector3.zero;
+    }
 }

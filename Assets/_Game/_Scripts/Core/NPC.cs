@@ -25,10 +25,6 @@ public class NPC : MonoBehaviour, ITriggerable, IAttackable
     {
         Punch(attacker);
     }
-    void Update()
-    {
-        
-    }
     void Punch(Transform attacker)
     {
         if (!attackable) return; // chua duoc danh ko danh
